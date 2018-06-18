@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "78326857-8512-422a-9385-9c74f1dcc4ed",
+		"name": "Simple API Postman Collections",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://api.github.com/users/rebeldroid12",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.github.v3+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.github.com/users/rebeldroid12",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"rebeldroid12"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET EMPLOYEES - 200",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"employees"
+					]
+				},
+				"description": "LIST"
+			},
+			"response": []
+		},
+		{
+			"name": "GET EMPLOYEE - 200",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/employees/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"employees",
+						"1"
+					]
+				},
+				"description": "ONE EMPLOYEE"
+			},
+			"response": []
+		},
+		{
+			"name": "GET EMPLOYEE - 404 NOT FOUND",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/employees/500",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"employees",
+						"500"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST EMPLOYEES - 201",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"L\",\n\t\"department\": \"soccer\",\n\t\"salary\": 100000\n\t\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"employees"
+					]
+				},
+				"description": "POST EMPLOYEE W/GOOD BODY"
+			},
+			"response": []
+		},
+		{
+			"name": "POST EMPLOYEES - 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"employees"
+					]
+				},
+				"description": "POST EMPLOYEES W/BAD DATA"
+			},
+			"response": []
+		}
+	]
+}
