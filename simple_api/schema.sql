@@ -1,7 +1,6 @@
-drop table if exists employees;
-create table employees (
+drop table if exists foods;
+create table foods (
   id integer primary key autoincrement,
   name text not null,
-  department text not null,
-  salary numeric not null
+  food_type text not null
 );
