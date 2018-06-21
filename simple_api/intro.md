@@ -6,11 +6,11 @@ In this talk, you’ll learn the basics of what a RESTFUL API is, how to read an
 This is super helpful for anyone interested in web or product development in software engineering.
 
 ### What we’ll cover:
-Brief overview of a database and how to use it
-What is a RESTFUL API?
-Using RESTFUL APIs
-Endpoint creation - GET/POST/PATCH/DELETE
-Documentation
+- Brief overview of a database and how to use it
+- What is a RESTFUL API?
+- Using RESTFUL APIs
+- Endpoint creation - GET/POST/PATCH/DELETE
+- Documentation
 
 
 
