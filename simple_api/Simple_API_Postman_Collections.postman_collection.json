@@ -110,30 +110,6 @@
 			"response": []
 		},
 		{
-			"name": "GET DOCS",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:5000/docs",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"docs"
-					]
-				},
-				"description": "ONE FOOD"
-			},
-			"response": []
-		},
-		{
 			"name": "GET FOOD - 404 NOT FOUND",
 			"request": {
 				"method": "GET",
