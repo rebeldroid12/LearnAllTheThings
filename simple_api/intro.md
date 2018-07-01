@@ -12,7 +12,7 @@ This is super helpful for anyone interested in web or product development in sof
 - Endpoint creation - GET/POST/PATCH/DELETE
 - Documentation: http://localhost:5000/apidocs/
 
-
+![api](https://github.com/rebeldroid12/LearnAllTheThings/blob/master/simple_api/swagger.png)
 
 ### Instructor: Loren Velasquez
 

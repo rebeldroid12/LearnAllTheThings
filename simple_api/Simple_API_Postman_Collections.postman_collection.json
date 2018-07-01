@@ -85,31 +85,6 @@
 			"response": []
 		},
 		{
-			"name": "DELETE FOOD",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:5000/foods/4",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "5000",
-					"path": [
-						"foods",
-						"4"
-					]
-				},
-				"description": "ONE FOOD"
-			},
-			"response": []
-		},
-		{
 			"name": "GET FOOD - 404 NOT FOUND",
 			"request": {
 				"method": "GET",
@@ -192,6 +167,35 @@
 			"response": []
 		},
 		{
+			"name": "POST FOODS - 400 No Body",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/foods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"foods"
+					]
+				},
+				"description": "POST FOOD W/BAD DATA"
+			},
+			"response": []
+		},
+		{
 			"name": "PATCH FOODS",
 			"request": {
 				"method": "PATCH",
@@ -222,31 +226,27 @@
 			"response": []
 		},
 		{
-			"name": "POST FOODS - 400 No Body",
+			"name": "DELETE FOOD",
 			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
+				"method": "DELETE",
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{}"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:5000/foods",
+					"raw": "http://localhost:5000/foods/4",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "5000",
 					"path": [
-						"foods"
+						"foods",
+						"4"
 					]
 				},
-				"description": "POST FOOD W/BAD DATA"
+				"description": "ONE FOOD"
 			},
 			"response": []
 		}
