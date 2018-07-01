@@ -1,15 +1,8 @@
 import os
 import sqlite3
-from flask import Flask, g, jsonify, make_response
-import json
-
-from apispec import APISpec
-from flask import request, make_response, jsonify
-from marshmallow import Schema, fields
-# from app import app, get_db, insert, bad_request, not_found
-
-from flask import jsonify
-from flask.views import MethodView
+from flask import Flask, g, request, make_response, jsonify
+from flasgger import Swagger
+from schemas import FoodSchema, FoodPatchSchema
 
 
 # wonderful code found here: http://flask.pocoo.org/docs/0.12/tutorial/setup/#tutorial-setup
@@ -18,6 +11,7 @@ from flask.views import MethodView
 
 app = Flask(__name__)   # create the application instance
 app.config.from_object(__name__)    # load config from this file , super_simple_flask_app.py
+Swagger(app)
 
 DATABASE = os.path.join(app.root_path, 'testdb.db')
 
@@ -60,7 +54,7 @@ def initdb_command():
 
 
 # http://flask.pocoo.org/snippets/37/ -- prepared statements
-def insert(table, fields=(), values=()):
+def create_data(table, fields=(), values=()):
     db = get_db()
     cur = db.cursor()
     query = 'INSERT INTO %s (%s) VALUES (%s)' % (
@@ -70,9 +64,45 @@ def insert(table, fields=(), values=()):
     )
     cur.execute(query, values)
     db.commit()
-    id = cur.lastrowid
+    food_id = cur.lastrowid
     cur.close()
-    return id
+    return food_id
+
+
+def read_data(table, food_id=None):
+    db = get_db()
+    query = f'SELECT * FROM {table}'
+
+    if food_id:
+        query = f'{query} WHERE id = {food_id}'
+
+    cur = db.execute(query)
+    results = cur.fetchall()
+    cur.close()
+    return results
+
+
+def update_data(table, new_food_type, food_id):
+    db = get_db()
+    cur = db.cursor()
+    query = f"UPDATE {table} SET food_type = '{new_food_type}' where id = {food_id}"
+
+    cur.execute(query)
+    db.commit()
+
+    updated_row = read_data(table=table, food_id=food_id)
+    return updated_row[0]
+
+
+def delete_data(table, food_id):
+    db = get_db()
+    cur = db.cursor()
+    query = f"DELETE FROM {table} where id = {food_id}"
+
+    cur.execute(query)
+    db.commit()
+
+    return {'message': f"Deleted row with id: {food_id}"}
 
 
 @app.errorhandler(404)
@@ -85,111 +115,230 @@ def bad_request():
     return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 
-# Create an APISpec
-spec = APISpec(
-    title='Swagger Food Inventory',
-    version='1.0.0',
-    plugins=[
-        'apispec.ext.flask',
-        'apispec.ext.marshmallow',
-    ],
-)
-
-
-class FoodSchema(Schema):
-    name = fields.Str(required=True)
-    food_type = fields.Str(required=True)
-
-
+# ENDPOINTS
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/foods', methods=['GET', 'POST'])
-def foods():
-    """Food Inventory
+@app.route('/foods', methods=['GET'])
+def get_foods():
+    """
+    Get a list of foods in inventory
     ---
-    get:
-        description: Get a list of foods in inventory
-        responses:
-            200:
-                description: Foods found
-                schema: FoodSchema
-
+    tags:
+      - Awesome Food API
+    responses:
+      200:
+        description: List of Foods
+        schema:
+          properties:
+            name:
+              type: string
+              description: Name of food
+            food_type:
+              type: string
+              description: How you categorize the food
     :return:
     """
 
-    if request.method == 'GET':
-        db = get_db()
-        cur = db.execute('select * from foods;')
-        foods = cur.fetchall()
+    foods = read_data(table='foods')
 
-        result = FoodSchema(many=True).dump(foods).data
+    result = FoodSchema(many=True).dump(foods).data     # all the foods
 
-        return make_response(jsonify(result), 200)  # SUCCESS
-
-    elif request.method == 'POST':
-        body = request.json
-
-        if not body:
-            return bad_request()  # BAD REQUEST
-
-        else:
-            result = FoodSchema().dump(body).data
-
-            new_row_id = insert(table='foods', fields=('name', 'food_type'),
-                                values=(result['name'],
-                                        result['food_type']))
-
-            result['id'] = new_row_id
-
-        return make_response(jsonify(result), 201)  # CREATED
+    return make_response(jsonify(result), 200)  # SUCCESS
 
 
-@app.route('/foods/<int:id>', methods=['GET'])
-def get_foods(id):
-    db = get_db()
-    cur = db.execute('select * from foods where id = {}'.format(id))
-    food = cur.fetchone()  # not a list, just one row that is form of list
+@app.route('/foods', methods=['POST'])
+def add_foods():
+    """
+    Add food to inventory
+    ---
+    tags:
+      - Awesome Food API
+    parameters:
+      - name: name
+        in: query
+        type: string
+        required: true
+        description: Name of food
+      - name: food_type
+        in: query
+        type: string
+        required: true
+        description: Type of food it is
 
-    if food:
-        result = FoodSchema().dump(food).data
+    responses:
+      201:
+        description: Food Created
+        schema:
+          properties:
+            id:
+              type: integer
+              description: ID
+            name:
+              type: string
+              description: Name of food
+            food_type:
+              type: string
+              description: Type of food it is
+      400:
+        description: Bad Request
+      422:
+        description: Unprocessable Entity
+    :return:
+    """
 
-        return make_response(jsonify(result), 200)  # SUCCESS
+    body = request.json
 
-    else:
+    if not body:
+        return bad_request()  # BAD REQUEST -- killing me small, I got nothing!
+
+    result, error = FoodSchema().load(body)
+
+    if error:
+        return make_response(jsonify(error), 422)   # UNPROCESSABLE ENTITY -- I hear what you are saying, but no
+
+    # cleared in schema check, now to post!
+    new_row_id = create_data(table='foods', fields=('name', 'food_type'),
+                             values=(result['name'],
+                                result['food_type']))
+
+    result['id'] = new_row_id       # gimme the id from the db
+
+    return make_response(jsonify(result), 201)  # CREATED
+
+
+@app.route('/foods/<int:food_id>', methods=['GET'])
+def get_food(food_id):
+    """Find particular food in inventory
+    ---
+    tags:
+      - Awesome Food API
+    parameters:
+      - name: food_id
+        in: path
+        type: integer
+        required: true
+        description: Food id
+    responses:
+      200:
+        description: Food Found
+        schema:
+          properties:
+            id:
+              type: integer
+              description: food id
+            name:
+              type: string
+              description: Name of food
+            food_type:
+              type: string
+              description: How you categorize the food
+      404:
+        description: Food not found
+    :return:
+    """
+    food = read_data(table='foods', food_id=food_id)  # list of 1 item
+
+    if not food:
         return not_found()  # NOT FOUND
 
+    result = FoodSchema().dump(food[0]).data
 
-spec.definition('Foods', schema=FoodSchema)
-with app.test_request_context():
-    spec.add_path(view=foods)
-
-
-# We're good to go! Save this to a file for now.
-with open('swagger.json', 'w') as f:
-    json.dump(spec.to_dict(), f)
-
-#
-# class SpecAPI(MethodView):
-#
-#     def get(self):
-#         spec.add_path(view=foods)
-#         body = spec.to_dict()
-#         merged = {**body}
-#
-#         return jsonify(merged), 200
-#
-# from flask import Blueprint
-# swagger = Blueprint('swagger', __name__, url_prefix="/swagger", static_folder="dist", template_folder="templates")
-#
-# spec_view = SpecAPI.as_view('spec_api')
-# swagger.add_url_rule('/spec', view_func=spec_view, methods=['GET', ])
-#
+    return make_response(jsonify(result), 200)  # SUCCESS
 
 
-@app.route('/docs')
-def docs():
-    docs = {"info": {"title": "Swagger Food Inventory", "version": "1.0.0"}, "paths": {"/foods": {"get": {"description": "Get a list of foods in inventory", "responses": {"200": {"description": "Foods found", "schema": {"$ref": "#/definitions/Foods"}}}}}}, "tags": [], "swagger": "2.0", "definitions": {"Foods": {"type": "object", "properties": {"food_type": {"type": "string"}, "name": {"type": "string"}}, "required": ["food_type", "name"]}}, "parameters": {}}
-    return jsonify(docs)
+@app.route('/foods/<int:food_id>', methods=['PATCH'])
+def update_food(food_id):
+    """Update food type of a food in inventory
+    ---
+    tags:
+      - Awesome Food API
+    parameters:
+      - name: food_id
+        in: path
+        type: integer
+        required: true
+        description: Food id
+      - name: food_type
+        in: query
+        type: string
+        required: true
+        description: Type of food it is
+    responses:
+      200:
+        description: Food Updated
+        schema:
+          properties:
+            id:
+              type: integer
+              description: food id
+            name:
+              type: string
+              description: Name of food
+            food_type:
+              type: string
+              description: How you categorize the food
+      400:
+        description: Bad Request
+      404:
+        description: Food not found
+      422:
+        description: Unprocessable Entity
+    :return:
+    """
+    food = read_data(table='foods', food_id=food_id)[0]  # list of 1 item
+
+    if not food:
+        return not_found()  # NOT FOUND
+
+    body = request.json
+
+    if not body:
+        return bad_request()  # BAD REQUEST -- killing me small, I got nothing!
+
+    result, error = FoodPatchSchema().load(body)
+
+    if error:
+        return make_response(jsonify(error))
+
+    new_row = update_data(table='foods', new_food_type=result['food_type'], food_id=food_id)
+
+    result = FoodSchema().dump(new_row).data
+
+    return make_response(jsonify(result), 200)  # SUCCESS
+
+
+@app.route('/foods/<int:food_id>', methods=['DELETE'])
+def delete_food(food_id):
+    """Delete food in inventory
+    ---
+    tags:
+      - Awesome Food API
+    parameters:
+      - name: food_id
+        in: path
+        type: integer
+        required: true
+        description: Food id
+    responses:
+      200:
+        description: Food Deleted
+      404:
+        description: Food not found
+    :return:
+    """
+    food = read_data(table='foods', food_id=food_id)  # list of 1 item
+
+    if not food:
+        return not_found()  # NOT FOUND
+
+    deleted = delete_data(table='foods', food_id=food_id)
+
+    return make_response(jsonify(deleted), 200)  # SUCCESS
+
+
+# API DOCS: http://localhost:5000/apidocs/
+
+app.run(debug=True)

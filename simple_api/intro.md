@@ -10,7 +10,7 @@ This is super helpful for anyone interested in web or product development in sof
 - What is a RESTFUL API?
 - Using RESTFUL APIs
 - Endpoint creation - GET/POST/PATCH/DELETE
-- Documentation
+- Documentation: http://localhost:5000/apidocs/
 
 
 

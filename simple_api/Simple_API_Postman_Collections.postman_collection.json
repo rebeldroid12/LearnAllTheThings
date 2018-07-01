@@ -85,6 +85,31 @@
 			"response": []
 		},
 		{
+			"name": "DELETE FOOD",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/foods/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"foods",
+						"4"
+					]
+				},
+				"description": "ONE FOOD"
+			},
+			"response": []
+		},
+		{
 			"name": "GET DOCS",
 			"request": {
 				"method": "GET",
@@ -144,7 +169,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"strawberry\",\n\t\"food_type\": \"fruits, also carbs\"\n\t\n}"
+					"raw": "{\n\t\"name\": \"bread\",\n\t\"food_type\": \"carbs yum\"\n\t\n}"
 				},
 				"url": {
 					"raw": "http://localhost:5000/foods",
@@ -162,7 +187,66 @@
 			"response": []
 		},
 		{
-			"name": "POST FOODS - 400",
+			"name": "POST FOODS - 422",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"food_type\": \"veggies\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/foods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"foods"
+					]
+				},
+				"description": "POST FOOD W/BAD DATA"
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH FOODS",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"food_type\": \"grains\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/foods/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"foods",
+						"5"
+					]
+				},
+				"description": "POST FOOD W/BAD DATA"
+			},
+			"response": []
+		},
+		{
+			"name": "POST FOODS - 400 No Body",
 			"request": {
 				"method": "POST",
 				"header": [
