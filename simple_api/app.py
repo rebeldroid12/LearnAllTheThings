@@ -341,4 +341,4 @@ def delete_food(food_id):
 
 # API DOCS: http://localhost:5000/apidocs/
 
-app.run(debug=True)
+app.run(debug=True)     # flask run

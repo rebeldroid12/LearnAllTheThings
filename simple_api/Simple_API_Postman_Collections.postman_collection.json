@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "78326857-8512-422a-9385-9c74f1dcc4ed",
-		"name": "Simple API Postman Collections",
+		"name": "simple_api_postman_collections",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -36,6 +36,29 @@
 			"response": []
 		},
 		{
+			"name": "Hello World - Flask running",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET FOODS - 200",
 			"request": {
 				"method": "GET",
@@ -60,7 +83,7 @@
 			"response": []
 		},
 		{
-			"name": "GET FOOD - 200",
+			"name": "GET FOOD BY ID - 200",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -85,7 +108,7 @@
 			"response": []
 		},
 		{
-			"name": "GET FOOD - 404 NOT FOUND",
+			"name": "GET FOODS BY ID - 404 NOT FOUND",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -207,10 +230,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"food_type\": \"grains\"\n}"
+					"raw": "{\n\t\"food_type\": \"veggies\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5000/foods/5",
+					"raw": "http://localhost:5000/foods/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -218,7 +241,7 @@
 					"port": "5000",
 					"path": [
 						"foods",
-						"5"
+						"1"
 					]
 				},
 				"description": "POST FOOD W/BAD DATA"
@@ -249,6 +272,28 @@
 				"description": "ONE FOOD"
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "88341a6c-4e35-43cf-98a3-8716e3e01462",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "36bb034b-d322-47f5-9b8c-3ccb54f43cf1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
