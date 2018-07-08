@@ -5,11 +5,14 @@ In this talk, you’ll learn the basics of what a RESTFUL API is, how to read an
 
 This is super helpful for anyone interested in web or product development in software engineering.
 
+### [The Slides](https://docs.google.com/presentation/d/1jipcCfXwcG9n5CqG_-Xt8iCAh6ZNUjPqWNQv1ycX1EY/edit?usp=sharing)
+
+
 ### What we’ll cover:
 - Brief overview of a database and how to use it
 - What is a RESTFUL API?
 - Using RESTFUL APIs
-- Endpoint creation - GET/POST/PATCH/DELETE
+- Endpoint demoing - GET/POST/PATCH/DELETE
 - Documentation: http://localhost:5000/apidocs/
 
 ![api](https://github.com/rebeldroid12/LearnAllTheThings/blob/master/simple_api/swagger.png)
