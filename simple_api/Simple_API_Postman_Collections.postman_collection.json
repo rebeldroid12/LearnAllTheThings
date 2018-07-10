@@ -13,6 +13,10 @@
 					{
 						"key": "Accept",
 						"value": "application/vnd.github.v3+json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
 					}
 				],
 				"body": {
@@ -143,7 +147,50 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"bread\",\n\t\"food_type\": \"carbs yum\"\n\t\n}"
+					"raw": "{\n\t\"name\": \"steak\",\n\t\"food_type\": \"protein\"\n\t\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/foods",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"foods"
+					]
+				},
+				"description": "POST FOOD W/GOOD BODY"
+			},
+			"response": []
+		},
+		{
+			"name": "POST FOODS - 201 but will need to update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b23abfe-31dd-4343-bd49-ab8d0d295fdc",
+						"type": "text/javascript",
+						"exec": [
+							"const response = pm.response.json()",
+							"",
+							"pm.environment.set('food_id_to_update', response.id)"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"walnuts\",\n\t\"food_type\": \"carbs\"\n\t\n}"
 				},
 				"url": {
 					"raw": "http://localhost:5000/foods",
@@ -230,10 +277,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"food_type\": \"veggies\"\n}"
+					"raw": "{\n\t\"food_type\": \"fats\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:5000/foods/1",
+					"raw": "http://localhost:5000/foods/{{food_id_to_update}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -241,7 +288,7 @@
 					"port": "5000",
 					"path": [
 						"foods",
-						"1"
+						"{{food_id_to_update}}"
 					]
 				},
 				"description": "POST FOOD W/BAD DATA"
