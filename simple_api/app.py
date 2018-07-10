@@ -133,6 +133,9 @@ def get_foods():
         description: List of Foods
         schema:
           properties:
+            id:
+              type: integer
+              description: Food ID
             name:
               type: string
               description: Name of food
